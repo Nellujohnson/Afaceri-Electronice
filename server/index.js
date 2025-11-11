@@ -3,9 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-// const { User } = require('./database/models');
 
 const userRoutes = require("./routes/user.routes");
+const authRoutes = require('./routes/auth.routes');
+const productRoutes = require('./routes/product.routes');
 
 const app = express();
 dotenv.config();
@@ -21,6 +22,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server successfully started on port ${PORT}`)
