@@ -5,35 +5,37 @@ import { toast } from "sonner"
 import { registerUser } from "../api/user.routes"
 
 export default function Register() {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  })
+    const navigate = useNavigate()
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: ''
+    })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
-  }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    const response = await registerUser(formData);
-
-    if (response.success) {
-      toast.success("Registration successful! Redirecting to login...")
-      setTimeout(() => {
-        navigate("/login")
-      }, 1500)
-    } else {
-      toast.error(response.message || "Registration failed")
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }))
     }
-  }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const response = await registerUser(formData);
+
+        if (response.success) {
+            toast.success("Registration successful! Redirecting to login...")
+            setTimeout(() => {
+                navigate('/login');
+            }, 1500)
+        } else {
+            toast.error(response.message || "Registration failed");
+        }
+    }
+
 
   return (
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">

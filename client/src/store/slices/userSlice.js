@@ -1,9 +1,12 @@
+// client/src/store/slices/userSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { decodeToken } from '../../utils/decodeToken';
 
 const initialState = {
   loggedIn: false,
   checkTokenLoading: true,
   token: null,
+  user: null,
 };
 
 const userSlice = createSlice({
@@ -13,11 +16,19 @@ const userSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
       state.loggedIn = !!action.payload;
-      localStorage.setItem('token', action.payload || '');
+      
+      if (action.payload) {
+        state.user = decodeToken(action.payload);
+        console.log(decodeToken(action.payload));
+        localStorage.setItem('token', action.payload);
+      } else {
+        state.user = null;
+      }
     },
     logout: (state) => {
       state.loggedIn = false;
       state.token = null;
+      state.user = null;
       localStorage.removeItem('token');
     },
     setCheckTokenLoading: (state, action) => {
