@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { fetchProducts, deleteProduct } from '../api/product.routes';
+import { addToCart } from '../api/cart.routes';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function ProductsPage() {
@@ -11,7 +12,10 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [addingToCartId, setAddingToCartId] = useState(null);
+  
   const user = useSelector((state) => state.user.user);
+  const loggedIn = useSelector((state) => state.user.loggedIn);
   const isAdmin = user?.role === 'admin';
   const navigate = useNavigate();
 
@@ -64,6 +68,29 @@ export default function ProductsPage() {
 
   const handleCreateClick = () => {
     navigate('/products/create');
+  };
+
+  const handleAddToCart = async (productId) => {
+    if (!loggedIn) {
+      toast.error('Please login to add products to cart');
+      navigate('/login');
+      return;
+    }
+
+    try {
+      setAddingToCartId(productId);
+      const response = await addToCart(productId, 1);
+
+      if (response?.success) {
+        toast.success('Product added to cart');
+      } else {
+        toast.error(response?.message || 'Failed to add product to cart');
+      }
+    } catch (err) {
+      toast.error(err.message || 'An error occurred while adding to cart');
+    } finally {
+      setAddingToCartId(null);
+    }
   };
 
   if (loading) {
@@ -154,6 +181,7 @@ export default function ProductsPage() {
                   </div>
                 )}
               </div>
+              
               <div className="mt-4 flex justify-between">
                 <div>
                   <h3 className="text-sm text-gray-700">
@@ -163,9 +191,21 @@ export default function ProductsPage() {
                     </a>
                   </h3>
                   <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+                  <p className="mt-1 text-xs text-gray-500">Stock: {product.stock}</p>
                 </div>
                 <p className="text-sm font-medium text-gray-900">${product.price}</p>
               </div>
+
+              {/* Add to Cart button */}
+              {loggedIn && (
+                <button
+                  onClick={() => handleAddToCart(product.id)}
+                  disabled={addingToCartId === product.id || product.stock === 0}
+                  className="relative z-20 mt-3 w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {addingToCartId === product.id ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                </button>
+              )}
             </div>
           ))}
         </div>

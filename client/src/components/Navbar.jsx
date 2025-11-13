@@ -8,9 +8,10 @@ import { logout } from '../store/slices/userSlice'
 import { classNames } from '../utils/tailwind'
 
 const navigation = [
-  { name: 'Homepage', href: '/' },
-  { name: 'Products', href: '/products' },
-]
+     { name: 'Homepage', href: '/' },
+     { name: 'Products', href: '/products' },
+     { name: 'Cart', href: '/cart' },
+   ]
 
 export default function Navbar() {
   const location = useLocation()
