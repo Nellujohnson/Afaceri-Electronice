@@ -85,7 +85,15 @@ router.get('/', verifyToken, async (req, res) => {
         const { userEmail } = req.query;
         let userId = req.userId;
 
-        if (req.userRole === 'admin' && userEmail) {
+        if (userEmail) {
+            if (req.userRole !== 'admin') {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Access denied. Only admins can view other users carts.',
+                    data: {}
+                });
+            }
+
             const user = await User.findOne({ where: { email: userEmail } });
             if (!user) {
                 return res.status(404).json({
