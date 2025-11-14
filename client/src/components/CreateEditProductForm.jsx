@@ -155,16 +155,23 @@ export default function CreateEditProductForm({ product = null, onSubmit, isLoad
               Category *
             </label>
             <div className="mt-1">
-              <input
-                type="text"
+              <select
                 id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
                 required
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2"
-                placeholder="Enter category"
-              />
+                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border px-3 py-2 bg-white"
+              >
+                <option value="">Select a category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Books">Books</option>
+                <option value="Home">Home</option>
+                <option value="Sports">Sports</option>
+                <option value="Food">Food</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 
